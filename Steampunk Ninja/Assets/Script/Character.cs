@@ -6,11 +6,14 @@ using UnityEngine.EventSystems;
 public class Character : MonoBehaviour
 {
     private bool isMuve = true;
+    private bool isMuveAnimation = false;
     private bool isGround;
+    public bool isSpuwnBrige = false;
     private Rigidbody rb;
     private GameObject Ground;
 
     public MeinScript meinScript;
+    public Animation Animation;
 
     private void OnEnable()
     {
@@ -27,10 +30,13 @@ public class Character : MonoBehaviour
     private void OnCollisionStay(Collision collision)
     {
         RaycastHit hitDown;
-        if (Physics.Raycast(transform.position, Vector3.down, out hitDown, 0.1f))
+        if (Physics.Raycast(transform.position, Vector3.down, out hitDown, 2))
         {
-            Ground = hitDown.transform.gameObject;
             isGround = true;
+        }
+        if (isSpuwnBrige)
+        {
+            meinScript.SetNewBright(Ground);
         }
     }
     private void OnCollisionExit(Collision collision)
@@ -45,6 +51,10 @@ public class Character : MonoBehaviour
             {
                 float moveDirection = 1;  // Например, движение вправо
                 rb.AddForce(new Vector3(moveDirection * 1, 0, 0), ForceMode.VelocityChange);
+                if(isMuveAnimation == false)
+                {
+                    AnimationMove();
+                }
 
                 // Ограничиваем скорость по оси X
                 if (Mathf.Abs(rb.velocity.x) > 1)
@@ -52,6 +62,10 @@ public class Character : MonoBehaviour
                     rb.velocity = new Vector3(Mathf.Sign(rb.velocity.x) * 1, rb.velocity.y, rb.velocity.z);
                 }
             }
+        }
+        if(rb.velocity.magnitude > 2)
+        {
+            Animationfall();
         }
     }
     private void OnDrawGizmos()
@@ -66,7 +80,18 @@ public class Character : MonoBehaviour
         {
             isMuve = false;
             rb.velocity = Vector3.zero;
+            transform.position = new Vector3(other.gameObject.transform.position.x, transform.position.y, transform.position.z);
+            Ground = other.gameObject.transform.parent.gameObject;
             SetNewBright();
+            EventManager.DoStop(); 
+            AnimationIdl();
+        }
+        else
+        {
+            if (other.gameObject.tag == "Finish")
+            {
+                EventManager.DoEndGame();
+            }
         }
     }
     private void SetMuve()
@@ -75,6 +100,30 @@ public class Character : MonoBehaviour
     }
     private void SetNewBright()
     {
-        meinScript.SetNewBright(Ground);
+        isSpuwnBrige = true;
+    }
+    public void AnimationMove()
+    {
+        Debug.Log(1);
+        isMuveAnimation = true;
+        Animation.Play("mixamo.com");
+        Animation.Stop("mixamo.com 1");
+        Animation.Stop("mixamo.com 2");
+    }
+    public void Animationfall()
+    {
+        Debug.Log(2);
+        isMuveAnimation = false;
+        Animation.Stop("mixamo.com 1");
+        Animation.Play("mixamo.com 1");
+        Animation.Stop("mixamo.com 2");
+    }
+    public void AnimationIdl()
+    {
+        Debug.Log(3);
+        isMuveAnimation = false;
+        Animation.Stop("mixamo.com 2");
+        Animation.Stop("mixamo.com 1");
+        Animation.Play("mixamo.com 2");
     }
 }

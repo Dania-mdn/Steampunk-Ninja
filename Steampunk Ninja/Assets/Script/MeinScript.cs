@@ -32,7 +32,7 @@ public class MeinScript : MonoBehaviour
             if(LastPushCilindr.transform.position.y < PositionDown.transform.position.y)
             {
                 GameObject newObjekt = Instantiate(PrefabPush, PositionSpuwn.transform.position, Quaternion.identity, MeinPushCilindr.transform);
-                newObjekt.transform.position = LastPushCilindr.transform.position + new Vector3(0, 0.36f, 0);
+                newObjekt.transform.position = LastPushCilindr.transform.position + new Vector3(0, 0.18f, 0);
                 LastPushCilindr = newObjekt;
             }
             isBuild = false;
@@ -59,5 +59,6 @@ public class MeinScript : MonoBehaviour
         MeinPushCilindr = MeinPush.GetComponent<Parametrer>().MeinPushCilindr;
         LastPushCilindr = MeinPush.GetComponent<Parametrer>().LastPushCilindr;
         MeinPushCilindr.GetComponent<HingeJoint>().connectedBody = Ground.GetComponent<Rigidbody>();
+        Character.GetComponent<Character>().isSpuwnBrige = false;
     }
 }
