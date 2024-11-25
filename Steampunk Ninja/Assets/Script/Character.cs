@@ -5,8 +5,9 @@ using UnityEngine.EventSystems;
 
 public class Character : MonoBehaviour
 {
-    private bool isMuve = true;
+    public bool isMuve = true;
     private bool isMuveAnimation = false;
+    private bool isFallAnimation = false;
     private bool isGround;
     public bool isSpuwnBrige = false;
     private Rigidbody rb;
@@ -32,7 +33,12 @@ public class Character : MonoBehaviour
         RaycastHit hitDown;
         if (Physics.Raycast(transform.position, Vector3.down, out hitDown, 2))
         {
+            Debug.Log(hitDown.transform.name);
             isGround = true;
+        }
+        else
+        {
+            isGround = false;
         }
         if (isSpuwnBrige)
         {
@@ -63,16 +69,13 @@ public class Character : MonoBehaviour
                 }
             }
         }
-        if(rb.velocity.magnitude > 2)
+        if(rb.velocity.y < -2)
         {
-            Animationfall();
+            if (isFallAnimation == false)
+            {
+                Animationfall();
+            }
         }
-    }
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-
-        Gizmos.DrawRay(transform.position, Vector3.down * 0.1f);
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -104,26 +107,38 @@ public class Character : MonoBehaviour
     }
     public void AnimationMove()
     {
-        Debug.Log(1);
         isMuveAnimation = true;
+        isFallAnimation = false;
         Animation.Play("mixamo.com");
         Animation.Stop("mixamo.com 1");
         Animation.Stop("mixamo.com 2");
+        Animation.Stop("mixamo.com 3");
     }
     public void Animationfall()
     {
-        Debug.Log(2);
         isMuveAnimation = false;
+        isFallAnimation = true;
         Animation.Stop("mixamo.com 1");
         Animation.Play("mixamo.com 1");
         Animation.Stop("mixamo.com 2");
+        Animation.Stop("mixamo.com 3");
     }
     public void AnimationIdl()
     {
-        Debug.Log(3);
         isMuveAnimation = false;
+        isFallAnimation = false;
         Animation.Stop("mixamo.com 2");
         Animation.Stop("mixamo.com 1");
         Animation.Play("mixamo.com 2");
+        Animation.Stop("mixamo.com 3");
+    }
+    public void AnimationRise()
+    {
+        isMuveAnimation = false;
+        isFallAnimation = false;
+        Animation.Stop("mixamo.com 2");
+        Animation.Stop("mixamo.com 1");
+        Animation.Stop("mixamo.com 2");
+        Animation.Play("mixamo.com 3");
     }
 }

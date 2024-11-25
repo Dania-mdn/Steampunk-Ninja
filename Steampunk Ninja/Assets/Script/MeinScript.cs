@@ -5,20 +5,27 @@ using UnityEngine;
 public class MeinScript : MonoBehaviour
 {
     private bool isHold = false;
+    private bool isHoldAnimation = false;
     private bool isBuild = true;
-    public GameObject Character;
+    public GameObject character;
     public GameObject PositionSpuwn;
     public GameObject PositionDown;
     public GameObject PrefabPush;
     public GameObject MeinPush;
     public GameObject PrefabMeinPush;
     public GameObject MeinPushCilindr;
+    public GameObject[] PushCilindrArray;
     private float speed = 150;
     public GameObject LastPushCilindr;
 
+    private void Start()
+    {
+        PushCilindrArray = new GameObject[30];
+    }
     public void Down()
     {
         isHold = true;
+        isHoldAnimation = true;
     }
     public void Up()
     {
@@ -26,9 +33,11 @@ public class MeinScript : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if (character.GetComponent<Character>().isMuve) return;
+
         if (isHold)
         {
-            Character.GetComponent<Rigidbody>().velocity = Vector3.up * (speed * Time.deltaTime);
+            character.GetComponent<Rigidbody>().velocity = Vector3.up * (speed * Time.deltaTime);
             if(LastPushCilindr.transform.position.y < PositionDown.transform.position.y)
             {
                 GameObject newObjekt = Instantiate(PrefabPush, PositionSpuwn.transform.position, Quaternion.identity, MeinPushCilindr.transform);
@@ -36,6 +45,11 @@ public class MeinScript : MonoBehaviour
                 LastPushCilindr = newObjekt;
             }
             isBuild = false;
+            if (isHoldAnimation)
+            {
+                character.GetComponent<Character>().AnimationRise();
+                isHoldAnimation = false;
+            }
         }
         else
         {
@@ -43,6 +57,7 @@ public class MeinScript : MonoBehaviour
             {
                 DropBright();
                 isBuild = true;
+                isHoldAnimation = true;
             }
         }
     }
@@ -55,10 +70,10 @@ public class MeinScript : MonoBehaviour
     }
     public void SetNewBright(GameObject Ground)
     {
-        MeinPush = Instantiate(PrefabMeinPush, PositionDown.transform.position, Quaternion.identity, Character.transform);
+        MeinPush = Instantiate(PrefabMeinPush, PositionDown.transform.position, Quaternion.identity, character.transform);
         MeinPushCilindr = MeinPush.GetComponent<Parametrer>().MeinPushCilindr;
         LastPushCilindr = MeinPush.GetComponent<Parametrer>().LastPushCilindr;
         MeinPushCilindr.GetComponent<HingeJoint>().connectedBody = Ground.GetComponent<Rigidbody>();
-        Character.GetComponent<Character>().isSpuwnBrige = false;
+        character.GetComponent<Character>().isSpuwnBrige = false;
     }
 }
