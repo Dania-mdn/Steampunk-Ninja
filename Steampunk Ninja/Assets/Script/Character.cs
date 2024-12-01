@@ -33,7 +33,6 @@ public class Character : MonoBehaviour
         RaycastHit hitDown;
         if (Physics.Raycast(transform.position, Vector3.down, out hitDown, 2))
         {
-            Debug.Log(hitDown.transform.name);
             isGround = true;
         }
         else
