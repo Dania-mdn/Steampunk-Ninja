@@ -14,7 +14,12 @@ public class Character : MonoBehaviour
     private GameObject Ground;
 
     public MeinScript meinScript;
-    public Animation Animation;
+    public Animation Animation1;
+    public Animation Animation2;
+    public Animation Animation3;
+    public Animation Animation4;
+
+    public GameObject[] Skin;
 
     private void OnEnable()
     {
@@ -108,36 +113,96 @@ public class Character : MonoBehaviour
     {
         isMuveAnimation = true;
         isFallAnimation = false;
-        Animation.Play("mixamo.com");
-        Animation.Stop("mixamo.com 1");
-        Animation.Stop("mixamo.com 2");
-        Animation.Stop("mixamo.com 3");
+        Animation1.Play("mixamo.com");
+        Animation1.Stop("mixamo.com 1");
+        Animation1.Stop("mixamo.com 2");
+        Animation1.Stop("mixamo.com 3");
+
+        Animation2.Play("mixamo.com");
+        Animation2.Stop("mixamo.com 1");
+        Animation2.Stop("mixamo.com 2");
+        Animation2.Stop("mixamo.com 3");
+
+        Animation3.Play("mixamo.com");
+        Animation3.Stop("mixamo.com 1");
+        Animation3.Stop("mixamo.com 2");
+        Animation3.Stop("mixamo.com 3");
+
+        Animation4.Play("mixamo.com");
+        Animation4.Stop("mixamo.com 1");
+        Animation4.Stop("mixamo.com 2");
+        Animation4.Stop("mixamo.com 3");
     }
     public void Animationfall()
     {
         isMuveAnimation = false;
         isFallAnimation = true;
-        Animation.Stop("mixamo.com 1");
-        Animation.Play("mixamo.com 1");
-        Animation.Stop("mixamo.com 2");
-        Animation.Stop("mixamo.com 3");
+        Animation1.Stop("mixamo.com 1");
+        Animation1.Play("mixamo.com 1");
+        Animation1.Stop("mixamo.com 2");
+        Animation1.Stop("mixamo.com 3");
+
+        Animation2.Stop("mixamo.com 1");
+        Animation2.Play("mixamo.com 1");
+        Animation2.Stop("mixamo.com 2");
+        Animation2.Stop("mixamo.com 3");
+
+        Animation3.Stop("mixamo.com 1");
+        Animation3.Play("mixamo.com 1");
+        Animation3.Stop("mixamo.com 2");
+        Animation3.Stop("mixamo.com 3");
+
+        Animation4.Stop("mixamo.com 1");
+        Animation4.Play("mixamo.com 1");
+        Animation4.Stop("mixamo.com 2");
+        Animation4.Stop("mixamo.com 3");
     }
     public void AnimationIdl()
     {
         isMuveAnimation = false;
         isFallAnimation = false;
-        Animation.Stop("mixamo.com 2");
-        Animation.Stop("mixamo.com 1");
-        Animation.Play("mixamo.com 2");
-        Animation.Stop("mixamo.com 3");
+        Animation1.Stop("mixamo.com 2");
+        Animation1.Stop("mixamo.com 1");
+        Animation1.Play("mixamo.com 2");
+        Animation1.Stop("mixamo.com 3");
+
+        Animation2.Stop("mixamo.com 2");
+        Animation2.Stop("mixamo.com 1");
+        Animation2.Play("mixamo.com 2");
+        Animation2.Stop("mixamo.com 3");
+
+        Animation3.Stop("mixamo.com 2");
+        Animation3.Stop("mixamo.com 1");
+        Animation3.Play("mixamo.com 2");
+        Animation3.Stop("mixamo.com 3");
+
+        Animation4.Stop("mixamo.com 2");
+        Animation4.Stop("mixamo.com 1");
+        Animation4.Play("mixamo.com 2");
+        Animation4.Stop("mixamo.com 3");
     }
     public void AnimationRise()
     {
         isMuveAnimation = false;
         isFallAnimation = false;
-        Animation.Stop("mixamo.com 2");
-        Animation.Stop("mixamo.com 1");
-        Animation.Stop("mixamo.com 2");
-        Animation.Play("mixamo.com 3");
+        Animation1.Stop("mixamo.com 2");
+        Animation1.Stop("mixamo.com 1");
+        Animation1.Stop("mixamo.com 2");
+        Animation1.Play("mixamo.com 3");
+
+        Animation2.Stop("mixamo.com 2");
+        Animation2.Stop("mixamo.com 1");
+        Animation2.Stop("mixamo.com 2");
+        Animation2.Play("mixamo.com 3");
+
+        Animation3.Stop("mixamo.com 2");
+        Animation3.Stop("mixamo.com 1");
+        Animation3.Stop("mixamo.com 2");
+        Animation3.Play("mixamo.com 3");
+
+        Animation4.Stop("mixamo.com 2");
+        Animation4.Stop("mixamo.com 1");
+        Animation4.Stop("mixamo.com 2");
+        Animation4.Play("mixamo.com 3");
     }
 }

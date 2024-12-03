@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+using System.Diagnostics;
 
 public class UI : MonoBehaviour
 {
@@ -18,6 +19,10 @@ public class UI : MonoBehaviour
     public TextMeshProUGUI ScoreEndGameText;
     public TextMeshProUGUI BestScoreCountText;
 
+    public GameObject[] Scin;
+    private int i = 0;
+    private Character CharacterSc;
+
     private void OnEnable()
     {
         EventManager.EndGame += EndGame;
@@ -30,6 +35,8 @@ public class UI : MonoBehaviour
     }
     private void Start()
     {
+        CharacterSc = Character.GetComponent<Character>();
+
         if (PlayerPrefs.HasKey("Restart"))
         {
             Character.SetActive(true);
@@ -85,6 +92,83 @@ public class UI : MonoBehaviour
         if (PlayerPrefs.HasKey("Restart"))
         {
             PlayerPrefs.DeleteKey("Restart");
+        }
+    }
+    public void Right()
+    {
+        if (i < 3)
+        {
+            i++;
+        }
+        else
+        {
+            i = 0;
+        }
+
+        for (int j = 0; j < Scin.Length; j++)
+        {
+            if(i == j)
+            {
+                Scin[j].SetActive(true);
+            }
+            else
+            {
+                Scin[j].SetActive(false);
+            }
+        }
+    }
+    public void Left()
+    {
+        if(i > 0)
+        {
+            i--;
+        }
+        else
+        {
+            i = 3;
+        }
+
+        for (int j = 0; j < Scin.Length; j++)
+        {
+            if(i == j)
+            {
+                Scin[j].SetActive(true);
+            }
+            else
+            {
+                Scin[j].SetActive(false);
+            }
+        }
+    }
+    public void Buy()
+    {
+        if (SetMoney(50))
+        {
+            for (int j = 0; j < Scin.Length; j++)
+            {
+                if (i == j)
+                {
+                    CharacterSc.Skin[j].SetActive(true);
+                }
+                else
+                {
+                    CharacterSc.Skin[j].SetActive(false);
+                }
+            }
+        }
+    }
+    public bool SetMoney(int Price)
+    {
+        if(Money - Price >= 0)
+        {
+            Money = Money - Price;
+            MoneyText.text = Money.ToString();
+            PlayerPrefs.SetInt("Money", Money);
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
