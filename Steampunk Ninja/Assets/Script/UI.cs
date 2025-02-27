@@ -7,6 +7,7 @@ using System.Diagnostics;
 
 public class UI : MonoBehaviour
 {
+    public GameDistribution GameDistribution;
     public GameObject GameOverPanel;
     public GameObject Home;
     public GameObject Character;
@@ -22,19 +23,30 @@ public class UI : MonoBehaviour
     public GameObject[] Scin;
     private int i = 0;
     private Character CharacterSc;
+    public Toggle audio;
+    private bool isMuteAudio;
+    public AudioSource song;
+    public AudioSource button;
+
+    public TextMeshProUGUI BuyText;
 
     private void OnEnable()
     {
         EventManager.EndGame += EndGame;
         EventManager.Stop += Step;
+        EventManager.MuteAudio += AudioMute;
+        EventManager.PlayAudio += AudioPlay;
     }
     private void OnDisable()
     {
         EventManager.EndGame -= EndGame;
         EventManager.Stop -= Step;
+        EventManager.MuteAudio -= AudioMute;
+        EventManager.PlayAudio -= AudioPlay;
     }
     private void Start()
     {
+        GameDistribution.ShowAd();
         CharacterSc = Character.GetComponent<Character>();
 
         if (PlayerPrefs.HasKey("Restart"))
@@ -48,10 +60,27 @@ public class UI : MonoBehaviour
         }
         else
         {
-            Money = 5000;
+            Money = 0;
         }
         MoneyText.text = Money.ToString();
         Score = 0;
+
+        if(PlayerPrefs.GetInt("MuteAudio") == 1)
+        {
+            audio.isOn = false;
+        }
+
+        for (int j = 0; j < Scin.Length; j++)
+        {
+            if (PlayerPrefs.GetInt("BuyScin") == j)
+            {
+                CharacterSc.Skin[j].SetActive(true);
+            }
+            else
+            {
+                CharacterSc.Skin[j].SetActive(false);
+            }
+        }
     }
     private void EndGame()
     {
@@ -116,6 +145,22 @@ public class UI : MonoBehaviour
                 Scin[j].SetActive(false);
             }
         }
+
+        if (PlayerPrefs.GetInt("Buy" + i) == 1)
+        {
+            BuyText.text = "Apply".ToString();
+        }
+        else
+        {
+            if (i == 0)
+            {
+                BuyText.text = "Apply".ToString();
+            }
+            else
+            {
+                BuyText.text = (50 * i).ToString();
+            }
+        }
     }
     public void Left()
     {
@@ -139,10 +184,27 @@ public class UI : MonoBehaviour
                 Scin[j].SetActive(false);
             }
         }
+
+
+        if (PlayerPrefs.GetInt("Buy" + i) == 1)
+        {
+            BuyText.text = "Apply".ToString();
+        }
+        else
+        {
+            if (i == 0)
+            {
+                BuyText.text = "Apply".ToString();
+            }
+            else
+            {
+                BuyText.text = (50 * i).ToString();
+            }
+        }
     }
     public void Buy()
     {
-        if (SetMoney(50))
+        if(PlayerPrefs.GetInt("Buy" + i) == 1)
         {
             for (int j = 0; j < Scin.Length; j++)
             {
@@ -154,6 +216,26 @@ public class UI : MonoBehaviour
                 {
                     CharacterSc.Skin[j].SetActive(false);
                 }
+            }
+        }
+        else 
+        {
+            if (SetMoney(50 * i))
+            {
+                for (int j = 0; j < Scin.Length; j++)
+                {
+                    if (i == j)
+                    {
+                        CharacterSc.Skin[j].SetActive(true);
+                    }
+                    else
+                    {
+                        CharacterSc.Skin[j].SetActive(false);
+                    }
+                }
+                PlayerPrefs.SetInt("Buy" + i, 1);
+                PlayerPrefs.SetInt("BuyScin", i);
+                BuyText.text = "Apply".ToString();
             }
         }
     }
@@ -170,5 +252,34 @@ public class UI : MonoBehaviour
         {
             return false;
         }
+    }
+    public void Audio()
+    {
+        if (isMuteAudio == false)
+        {
+            isMuteAudio = true;
+            EventManager.DoMuteAudio();
+            PlayerPrefs.SetInt("MuteAudio", 1);
+        }
+        else
+        {
+            isMuteAudio = false;
+            EventManager.DoPlayAudio();
+            PlayerPrefs.DeleteKey("MuteAudio");
+        }
+    }
+    public void delete()
+    {
+        PlayerPrefs.DeleteAll();
+    }
+    public void AudioMute()
+    {
+        song.mute = true;
+        button.mute = true;
+    }
+    public void AudioPlay()
+    {
+        song.mute = false;
+        button.mute = true;
     }
 }

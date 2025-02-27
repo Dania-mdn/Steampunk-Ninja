@@ -19,7 +19,7 @@ public class Enviroment : MonoBehaviour
     private void GenerationNewCube()
     {
         Cube = NextCube;
-        SpawnPosition = new Vector3(Cube.transform.position.x + Random.Range(3f, 4.5f), Cube.transform.position.y + Random.Range(-2f, 2f), transform.position.z);
+        SpawnPosition = new Vector3(Cube.transform.position.x + Random.Range(3f, 4.5f), Cube.transform.position.y + Random.Range(-1.7f, 2f), transform.position.z);
         NextCube = Instantiate(PrefabCube[Random.Range(0, PrefabCube.Length)], SpawnPosition, Quaternion.identity, transform);
     }
 }

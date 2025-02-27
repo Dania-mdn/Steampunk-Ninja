@@ -19,26 +19,40 @@ public class Character : MonoBehaviour
     public Animation Animation3;
     public Animation Animation4;
 
+    public AudioSource fail;
+    public AudioSource run;
+    public AudioSource jump;
+    public AudioSource build;
+
     public GameObject[] Skin;
 
     private void OnEnable()
     {
         EventManager.Muve += SetMuve;
+        EventManager.MuteAudio += AudioMute;
+        EventManager.PlayAudio += AudioPlay;
     }
     private void OnDisable()
     {
         EventManager.Muve -= SetMuve;
+        EventManager.MuteAudio -= AudioMute;
+        EventManager.PlayAudio -= AudioPlay;
     }
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        if (PlayerPrefs.GetInt("MuteAudio") == 1)
+        {
+            AudioMute();
+        }
     }
     private void OnCollisionStay(Collision collision)
     {
         RaycastHit hitDown;
-        if (Physics.Raycast(transform.position, Vector3.down, out hitDown, 2))
+        if (Physics.Raycast(transform.position, Vector3.down, out hitDown, 1))
         {
-            isGround = true;
+            isGround = true; 
+            Debug.DrawLine(transform.position, hitDown.point, Color.green);
         }
         else
         {
@@ -73,7 +87,7 @@ public class Character : MonoBehaviour
                 }
             }
         }
-        if(rb.velocity.y < -2)
+        if(rb.velocity.y < -3)
         {
             if (isFallAnimation == false)
             {
@@ -85,6 +99,7 @@ public class Character : MonoBehaviour
     {
         if(other.gameObject.tag == "stop")
         {
+            build.Stop();
             isMuve = false;
             rb.velocity = Vector3.zero;
             transform.position = new Vector3(other.gameObject.transform.position.x, transform.position.y, transform.position.z);
@@ -97,6 +112,7 @@ public class Character : MonoBehaviour
         {
             if (other.gameObject.tag == "Finish")
             {
+                fail.Play();
                 EventManager.DoEndGame();
             }
         }
@@ -111,6 +127,11 @@ public class Character : MonoBehaviour
     }
     public void AnimationMove()
     {
+        jump.Play();
+        if (build.isPlaying)
+            build.Stop();
+        run.Play();
+
         isMuveAnimation = true;
         isFallAnimation = false;
         Animation1.Play("mixamo.com");
@@ -135,6 +156,10 @@ public class Character : MonoBehaviour
     }
     public void Animationfall()
     {
+        if (build.isPlaying)
+            build.Stop();
+        if (run.isPlaying)
+            run.Stop();
         isMuveAnimation = false;
         isFallAnimation = true;
         Animation1.Stop("mixamo.com 1");
@@ -159,6 +184,10 @@ public class Character : MonoBehaviour
     }
     public void AnimationIdl()
     {
+        if (build.isPlaying)
+            build.Stop();
+        if (run.isPlaying)
+            run.Stop();
         isMuveAnimation = false;
         isFallAnimation = false;
         Animation1.Stop("mixamo.com 2");
@@ -183,6 +212,10 @@ public class Character : MonoBehaviour
     }
     public void AnimationRise()
     {
+        if (run.isPlaying)
+            run.Stop();
+        build.Play();
+
         isMuveAnimation = false;
         isFallAnimation = false;
         Animation1.Stop("mixamo.com 2");
@@ -204,5 +237,19 @@ public class Character : MonoBehaviour
         Animation4.Stop("mixamo.com 1");
         Animation4.Stop("mixamo.com 2");
         Animation4.Play("mixamo.com 3");
+    }
+    public void AudioMute()
+    {
+        fail.mute = true;
+        run.mute = true;
+        jump.mute = true;
+        build.mute = true;
+    }
+    public void AudioPlay()
+    {
+        fail.mute = false;
+        run.mute = false;
+        jump.mute = false;
+        build.mute = false;
     }
 }
